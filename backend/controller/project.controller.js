@@ -26,6 +26,18 @@ export const createProject = async (req,res) =>{
 
 }
 
+export const getProjectById = async (req, res) => {
+    const {projectId} = req.params;
+
+    try{
+        const project = await projectService.getProjectById({projectId});
+        res.status(200).json(project);
+    }catch(err){
+        console.log(err);
+        res.status(400).json({error: err.message})
+    }
+}
+
 export const getAllProjects = async( req, res) => {
     try{
         const loggedInUser = await userModel.findOne({email: req.user.email});

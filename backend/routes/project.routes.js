@@ -10,6 +10,11 @@ router.post('/create',
     projectController.createProject
  )
 
+router.get('/get-project/:projectId',
+    authMiddleWare.authUser,
+    projectController.getProjectById
+)
+
  router.get('/all', 
     authMiddleWare.authUser,
     projectController.getAllProjects
@@ -22,5 +27,6 @@ router.post('/create',
     .custom((users) => users.every(user => typeof user === 'string')).withMessage('Each user must be a string'),
     projectController.addUserToProject
  )
+
 
 export default router;
