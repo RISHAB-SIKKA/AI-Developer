@@ -14,7 +14,7 @@ const Home = () => {
 
   function createProject(e) {
     e.preventDefault();
-    console.log(projectName);
+    // console.log(projectName);
 
     axios.post('/projects/create', {
       name: projectName,
