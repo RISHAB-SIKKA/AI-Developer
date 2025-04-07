@@ -4,8 +4,10 @@ import connect from "./db/db.js"
 connect();
 import userRoutes from './routes/user.routes.js';
 import projectRoutes from './routes/project.routes.js'
+import aiRoutes from './routes/ai.routes.js'
 import cookieParser from 'cookie-parser';
 import cors from 'cors';
+
 
 
 //initialize express
@@ -25,6 +27,7 @@ app.get('/', (req,res) => {
 });
 app.use('/users', userRoutes);
 app.use('/projects', projectRoutes);
+app.use('/ai', aiRoutes)
 
 export default app;
 
