@@ -4,6 +4,7 @@ import app from './app.js';
 const port = process.env.PORT || 3000;
 import {Server} from 'socket.io';
 import { socketMiddleware } from './middleware/socket.middleware.js';
+import { generateResult } from './services/ai.service.js';
 
 
 const server = http.createServer(app);
@@ -17,16 +18,28 @@ socketMiddleware(io);
 
 io.on('connection', socket => {
     socket.roomId = socket.project._id.toString();
-    console.log('A user connected');
-    
     socket.join(socket.roomId);
 
-    socket.on('project-message', data => {
+    socket.on('project-message', async data => {
+        const message  =data.message;
+        
+        const aiIsPresentInMessage = message.includes('@ai');
         socket.broadcast.to(socket.roomId).emit('project-message', data);
-        console.log(data);
+
+        if(aiIsPresentInMessage){
+           const prompt = message.replace('@ai', '');
+           const result = await generateResult(prompt);
+
+           io.to(socket.roomId).emit('project-message', {
+            message: result,   
+            sender:{
+                _id:'ai',
+                email: 'AI'
+            }
+           })
+        }
+
     })
-    // Handle socket events here    
-    // socket.on('event', data => { /* … */ });
     socket.on('disconnect', () => { 
         socket.leave(socket.roomId)
     });
